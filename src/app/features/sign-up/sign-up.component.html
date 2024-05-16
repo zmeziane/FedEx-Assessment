@@ -1,0 +1,139 @@
+<div class="p-4">
+  <mat-card class="mx-auto mt-4 max-w-4xl">
+    <mat-card-header>
+      <mat-card-title>Welcome! Let's start.</mat-card-title>
+      <mat-card-subtitle
+        >Please fill in your details below to create your
+        profile.</mat-card-subtitle
+      >
+    </mat-card-header>
+    <mat-card-content>
+      <form
+        [formGroup]="signUpForm"
+        (ngSubmit)="submitForm()"
+        [attr.aria-busy]="isSubmitting ? 'true' : 'false'"
+        class="mt-4 flex flex-col">
+        <div formGroupName="name" class="flex flex-col">
+          <div class="flex flex-col gap-2 md:flex-row">
+            <mat-form-field class="flex-1">
+              <mat-label>First Name:</mat-label>
+              <input matInput formControlName="firstName" required />
+              @if (
+                signUpForm.controls.name.controls.firstName.touched &&
+                signUpForm.controls.name.controls.firstName.invalid
+              ) {
+                @if (
+                  signUpForm.controls.name.controls.firstName.errors?.[
+                    'required'
+                  ]
+                ) {
+                  <mat-error>First name is required</mat-error>
+                }
+              }
+            </mat-form-field>
+            <mat-form-field class="flex-1">
+              <mat-label>Last Name:</mat-label>
+              <input matInput formControlName="lastName" required />
+              @if (
+                signUpForm.controls.name.controls.lastName.touched &&
+                signUpForm.controls.name.controls.lastName.invalid
+              ) {
+                @if (
+                  signUpForm.controls.name.controls.lastName.errors?.[
+                    'required'
+                  ]
+                ) {
+                  <mat-error>Last name is required</mat-error>
+                }
+              }
+            </mat-form-field>
+          </div>
+
+          @if (fullName) {
+            <p class="mb-4">Full Name: {{ fullName }}</p>
+          }
+        </div>
+        <mat-form-field>
+          <mat-label>Email:</mat-label>
+          <input matInput type="email" formControlName="email" required />
+          @if (
+            signUpForm.controls.email.touched &&
+            signUpForm.controls.email.invalid
+          ) {
+            @if (signUpForm.controls.email.errors?.['required']) {
+              <mat-error>Email is required</mat-error>
+            }
+            @if (signUpForm.controls.email.errors?.['email']) {
+              <mat-error>Invalid email format</mat-error>
+            }
+          }
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Password:</mat-label>
+          <input matInput type="password" formControlName="password" required />
+          @if (
+            signUpForm.controls.password.touched &&
+            (signUpForm.invalid || signUpForm.controls.password.invalid)
+          ) {
+            @if (signUpForm.controls.password.errors?.['required']) {
+              <mat-error>Password is required</mat-error>
+            }
+            @if (signUpForm.controls.password.errors?.['minlength']) {
+              <mat-error
+                >Password should have minimum length of
+                {{ minPasswordLength }} characters</mat-error
+              >
+            }
+            @if (signUpForm.controls.password.errors?.['hasUpperCase']) {
+              <mat-error
+                >Password should have contain at least one upper case
+                letter</mat-error
+              >
+            }
+            @if (signUpForm.controls.password.errors?.['hasLowerCase']) {
+              <mat-error
+                >Password should have contain at least one lower case
+                letter</mat-error
+              >
+            }
+            @if (signUpForm.errors?.['passwordContainsFirstName']) {
+              <mat-error
+                >Password should not contain first name
+                {{ signUpForm.value.name?.firstName }}</mat-error
+              >
+            }
+            @if (signUpForm.errors?.['passwordContainsLastName']) {
+              <mat-error
+                >Password should not contain last name
+                {{ signUpForm.value.name?.lastName }}</mat-error
+              >
+            }
+          }
+        </mat-form-field>
+
+        <button
+          mat-raised-button
+          type="submit"
+          [disabled]="isSubmitting"
+          color="primary"
+          class="w-28">
+          @if (isSubmitting) {
+            <mat-icon>
+              <mat-spinner diameter="16" color="accent" />
+            </mat-icon>
+          }
+          Sign Up
+        </button>
+      </form>
+    </mat-card-content>
+    <mat-card-footer class="my-4 text-center">
+      <div aria-live="polite" aria-atomic="true">
+        @if (isSuccess) {
+          <h1>Sign up was successfull</h1>
+        } @else if (isError) {
+          <mat-error>Sign up failed for some reason</mat-error>
+        }
+      </div>
+    </mat-card-footer>
+  </mat-card>
+</div>
